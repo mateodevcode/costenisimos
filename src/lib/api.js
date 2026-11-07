@@ -37,17 +37,32 @@ function mensajeZod(err) {
 
 const METODOS_MUTACION = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
-/** Protección CSRF adicional: el Origin de toda mutación debe coincidir con APP_URL. */
+/** Origen con el que llegó la petición a este servidor (respeta el proxy de Vercel). */
+function origenPropio(req) {
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+  if (!host) return null;
+  const proto = (req.headers.get("x-forwarded-proto") || req.nextUrl?.protocol?.replace(":", "") || "https").split(",")[0].trim();
+  return `${proto}://${host.split(",")[0].trim()}`;
+}
+
+/**
+ * Protección CSRF adicional: el Origin de toda mutación debe ser el de APP_URL o el del propio
+ * dominio que recibe la petición (cubre previews de Vercel y dominios adicionales). Una web ajena
+ * no puede falsificar ni su Origin ni el Host de este servidor.
+ */
 function verificarOrigen(req) {
   if (!METODOS_MUTACION.has(req.method)) return;
   const origin = req.headers.get("origin");
-  let esperado;
+  const permitidos = new Set();
   try {
-    esperado = new URL(env.APP_URL).origin;
+    permitidos.add(new URL(env.APP_URL).origin);
   } catch {
     throw new Error("[env] APP_URL no es una URL válida.");
   }
-  if (!origin || origin !== esperado) {
+  const propio = origenPropio(req);
+  if (propio) permitidos.add(propio);
+  if (!origin || !permitidos.has(origin)) {
+    console.warn(`[csrf] Origin rechazado: ${origin ?? "(sin Origin)"} · permitidos: ${[...permitidos].join(", ")}`);
     throw new HttpError(403, "Origen de la solicitud no permitido.");
   }
 }
