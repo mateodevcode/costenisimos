@@ -101,26 +101,29 @@ export function TabsMenu({ menus, valor, onChange, className }) {
   );
 }
 
-/** Modal de detalle del producto con sus ingredientes. */
-export function DetalleProducto({ producto, onClose, mapaIngredientes, categorias, site }) {
+/**
+ * Modal de detalle del producto con sus ingredientes.
+ * `clases` permite a cada tema vestirlo: { contenido, imagen, titulo, precio, categoria }.
+ */
+export function DetalleProducto({ producto, onClose, mapaIngredientes, categorias, site, clases = {} }) {
   const ingredientes = producto ? producto.ingredientes.map((id) => mapaIngredientes.get(id)).filter(Boolean) : [];
   const categoria = producto ? categorias.find((c) => c.id === producto.categoria) : null;
   return (
     <Dialog open={Boolean(producto)} onOpenChange={(o) => !o && onClose()}>
-      <DialogContent className="max-h-[92dvh] gap-0 overflow-y-auto p-0 sm:max-w-lg">
+      <DialogContent className={cn("max-h-[92dvh] gap-0 overflow-y-auto p-0 sm:max-w-lg", clases.contenido)}>
         {producto && (
           <>
             <div className="relative">
-              <ImagenProducto src={producto.image} alt={producto.nombre} className="aspect-[4/3] w-full" sizes="(max-width: 640px) 100vw, 512px" prioridad />
+              <ImagenProducto src={producto.image} alt={producto.nombre} className={cn("aspect-[4/3] w-full", clases.imagen)} sizes="(max-width: 640px) 100vw, 512px" prioridad />
               {!producto.disponibilidad && <BadgeAgotado className="absolute top-3 left-3" />}
             </div>
             <div className="grid gap-4 p-6">
               <DialogHeader className="gap-1 text-left">
-                {categoria && <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">{categoria.nombre}</p>}
-                <DialogTitle className="font-display text-2xl">{producto.nombre}</DialogTitle>
+                {categoria && <p className={cn("text-xs font-medium tracking-wide text-muted-foreground uppercase", clases.categoria)}>{categoria.nombre}</p>}
+                <DialogTitle className={cn("font-display text-2xl", clases.titulo)}>{producto.nombre}</DialogTitle>
                 <DialogDescription asChild>
                   <div>
-                    <Precio valor={producto.precio} site={site} className="text-lg font-semibold text-brand" />
+                    <Precio valor={producto.precio} site={site} className={cn("text-lg font-semibold text-brand", clases.precio)} />
                   </div>
                 </DialogDescription>
               </DialogHeader>

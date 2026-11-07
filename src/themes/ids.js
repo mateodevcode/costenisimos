@@ -2,14 +2,15 @@
 // Al añadir un tema, agrégalo aquí y en registry.js (ver themes/README.md).
 
 export const HOME_THEMES_INFO = [
-  { id: "a", nombre: "Home A", descripcion: "Portada a todo color con horarios, mapa y redes." },
-  { id: "b", nombre: "Home B", descripcion: "Pantalla dividida con tarjetas de información." },
+  { id: "a", nombre: "Tropical", descripcion: "Azul de la caja de domicilios con hojas de colores y fotos en arco." },
+  { id: "b", nombre: "Papel kraft", descripcion: "Papel kraft con tinta azul, polaroids y notas a mano." },
+  { id: "c", nombre: "Lo auténtico", descripcion: "La pared verde oliva del local, letrero a mano y sello naranja." },
 ];
 
 export const MENU_THEMES_INFO = [
-  { id: "a", nombre: "Menú A", descripcion: "Cuadrícula con filtros" },
-  { id: "b", nombre: "Menú B", descripcion: "Lista tipo carta" },
-  { id: "c", nombre: "Menú C", descripcion: "Editorial por categorías" },
+  { id: "a", nombre: "Tropical", descripcion: "Pestañas por categoría y tarjetas con foto en arco." },
+  { id: "b", nombre: "Papel kraft", descripcion: "Hojas de papel por categoría, lista artesanal y polaroids." },
+  { id: "c", nombre: "Carta impresa", descripcion: "Como las cartas del local: sello naranja y precios en rosado." },
 ];
 
 export const HOME_THEME_IDS = HOME_THEMES_INFO.map((t) => t.id);

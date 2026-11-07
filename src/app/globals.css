@@ -1,8 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* El proyecto de referencia vive en la raíz pero no forma parte de la app. */
+/* Los proyectos de referencia viven en la raíz pero no forman parte de la app. */
 @source not "../../donaceci_v2";
+@source not "../../costenisimos-web";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -76,7 +77,16 @@
 
 @theme inline {
   --font-sans: var(--font-sans-app);
-  --font-display: var(--font-display-app);
+  --font-display: var(--nf-fraunces);
+
+  /* Tipografías de los temas (ver src/themes/fuentes.js) */
+  --font-fraunces: var(--nf-fraunces);
+  --font-nunito: var(--nf-nunito);
+  --font-young: var(--nf-young);
+  --font-figtree: var(--nf-figtree);
+  --font-caveat: var(--nf-caveat);
+  --font-anton: var(--nf-anton);
+  --font-yellowtail: var(--nf-yellowtail);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -115,6 +125,47 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* Paleta de marca Costeñisimos (caja de domicilios, cartas impresas y el local).
+   navy y sun también se pueden cambiar desde el panel vía --brand / --brand-2. */
+@theme {
+  --color-navy: #1b2a5c;
+  --color-navy-deep: #121d45;
+  --color-sun: #f2c230;
+  --color-sun-hi: #ffd65c;
+  --color-mango: #f08a24;
+  --color-hibiscus: #c9306a;
+  --color-leaf: #3e8e5a;
+  --color-paper: #fbf6ec;
+  --color-paper-2: #f4ead8;
+  --color-kraft: #e4cfa8;
+  --color-kraft-2: #d9c092;
+  --color-cream: #fbf4e8;
+  --color-cream-soft: #cdd2e6;
+  --color-ink-soft: #4c5576;
+  --color-olive: #5c6b45;
+  --color-olive-deep: #3f4b2f;
+  --color-line: #e3d5bc;
+}
+
+@utility grano-kraft {
+  background-color: var(--color-kraft);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .25 0 0 0 0 .12 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@utility puntos-navy {
+  background-image: radial-gradient(rgb(251 244 232 / 0.075) 1.1px, transparent 1.6px);
+  background-size: 16px 16px;
+}
+
+@utility muro-olivo {
+  background-color: var(--color-olive);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .12 0 0 0 0 .05 0 0 0 .25 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.fraunces-suave {
+  font-variation-settings: "SOFT" 100, "WONK" 1;
 }
 
 @layer base {

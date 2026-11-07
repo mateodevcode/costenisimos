@@ -40,6 +40,7 @@ yarn-error.log*
 # proyecto de referencia y notas locales (no forman parte de esta app)
 /donaceci_v2/
 /plan.md
+/costenisimos-web/
 
 # typescript
 *.tsbuildinfo

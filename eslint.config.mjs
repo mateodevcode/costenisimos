@@ -8,8 +8,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Proyecto de referencia visual: no forma parte de esta app.
+    // Proyectos de referencia visual: no forman parte de esta app.
     "donaceci_v2/**",
+    "costenisimos-web/**",
   ]),
 ]);
 

@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
-import { getSite } from "@/lib/config";
+import { getConfig, getSite } from "@/lib/config";
+import { PIELES, pielDe } from "@/components/public/pieles";
+import { cn } from "@/lib/utils";
 import { variablesMarca } from "@/lib/colores";
 import { PublicHeader } from "@/components/public/PublicHeader";
 import { PublicFooter } from "@/components/public/PublicFooter";
@@ -42,17 +44,18 @@ function MarcoCargando() {
 
 async function Marco({ children }) {
   await connection();
-  const site = await getSite();
+  const { site, home_theme } = await getConfig();
+  const piel = pielDe(home_theme);
   return (
-    <div style={variablesMarca(site)} className="flex min-h-dvh flex-col">
+    <div style={variablesMarca(site)} className={cn("flex min-h-dvh flex-col", PIELES[piel].fondo)}>
       <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2">
         Saltar al contenido
       </a>
-      <PublicHeader site={site} />
+      <PublicHeader site={site} piel={piel} />
       <div id="contenido" className="flex flex-1 flex-col">
         {children}
       </div>
-      <PublicFooter site={site} />
+      <PublicFooter site={site} piel={piel} />
     </div>
   );
 }
