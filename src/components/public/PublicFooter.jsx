@@ -3,7 +3,11 @@ import { MapPin, Phone } from "lucide-react";
 import { Redes } from "@/components/public/Redes";
 import { PIELES } from "@/components/public/pieles";
 import { Logo } from "@/themes/marca/Logo";
-import { telefonoHref, telefonoLegible, whatsappPrincipal } from "@/themes/marca/datos";
+import {
+  telefonoHref,
+  telefonoLegible,
+  whatsappPrincipal,
+} from "@/themes/marca/datos";
 import { cn } from "@/lib/utils";
 
 export function PublicFooter({ site, piel = "tropical" }) {
@@ -13,10 +17,23 @@ export function PublicFooter({ site, piel = "tropical" }) {
     <footer className={cn("relative", p.footer)}>
       <div className="mx-auto grid max-w-[1220px] gap-10 px-5 py-14 md:grid-cols-[1.2fr_1fr_1fr]">
         <div className="grid content-start gap-4">
-          <Link href="/" aria-label={`${site.nombre}, inicio`} className={cn("block w-48", p.logo)}>
+          <Link
+            href="/"
+            aria-label={`${site.nombre}, inicio`}
+            className={cn("block w-48", p.logo)}
+          >
             <Logo titulo={site.nombre} />
           </Link>
-          {site.slogan && <p className={cn("max-w-xs font-fraunces text-lg italic fraunces-suave", p.footerSuave)}>{site.slogan}</p>}
+          {site.slogan && (
+            <p
+              className={cn(
+                "max-w-xs font-fraunces text-lg italic fraunces-suave",
+                p.footerSuave,
+              )}
+            >
+              {site.slogan}
+            </p>
+          )}
           <Redes redes={site.redes} itemClassName={p.redes} />
         </div>
         <div className="grid content-start gap-3 text-[15px]">
@@ -28,28 +45,57 @@ export function PublicFooter({ site, piel = "tropical" }) {
             </p>
           )}
           {tel && (
-            <a href={telefonoHref(tel)} className={cn("flex gap-2 hover:underline", p.footerSuave)}>
+            <a
+              href={telefonoHref(tel)}
+              className={cn("flex gap-2 hover:underline", p.footerSuave)}
+            >
               <Phone className="mt-0.5 size-4 shrink-0" />
               {telefonoLegible(tel)}
             </a>
           )}
         </div>
-        <nav aria-label="Pie de página" className="grid content-start gap-2 text-[15px]">
+        <nav
+          aria-label="Pie de página"
+          className="grid content-start gap-2 text-[15px]"
+        >
           <p className="font-bold tracking-wide uppercase">Explora</p>
           {[
             ["/menu", "La carta"],
             ["/nosotros", "Nosotros"],
             ["/politicas-de-privacidad", "Política de privacidad"],
           ].map(([href, texto]) => (
-            <Link key={href} href={href} className={cn("w-fit hover:underline", p.footerSuave)}>
+            <Link
+              key={href}
+              href={href}
+              className={cn("w-fit hover:underline", p.footerSuave)}
+            >
               {texto}
             </Link>
           ))}
         </nav>
       </div>
-      <p className={cn("border-t py-5 text-center text-xs", p.footerBorde, p.footerSuave)}>
-        © {site.nombre}. Hecho con sabor costeño.
-      </p>
+
+      <div className={cn("border-t", p.footerBorde)}>
+        <div
+          className={cn(
+            "mx-auto flex max-w-[1220px] flex-col items-center gap-1.5 px-5 py-5 text-center text-xs sm:flex-row sm:justify-between sm:gap-4",
+            p.footerSuave,
+          )}
+        >
+          <p>© {site.nombre}. Hecho con sabor costeño.</p>
+          <p>
+            Desarrollado por{" "}
+            <a
+              href="https://seventwo.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold underline-offset-4 hover:underline"
+            >
+              seventwo
+            </a>
+          </p>
+        </div>
+      </div>
     </footer>
   );
 }

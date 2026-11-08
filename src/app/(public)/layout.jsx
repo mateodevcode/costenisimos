@@ -47,7 +47,7 @@ async function Marco({ children }) {
   const { site, home_theme } = await getConfig();
   const piel = pielDe(home_theme);
   return (
-    <div style={variablesMarca(site)} className={cn("flex min-h-dvh flex-col", PIELES[piel].fondo)}>
+    <div data-piel={piel} style={variablesMarca(site)} className={cn("flex min-h-dvh flex-col", PIELES[piel].fondo)}>
       <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-background focus:px-3 focus:py-2">
         Saltar al contenido
       </a>

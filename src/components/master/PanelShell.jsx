@@ -112,6 +112,14 @@ export function PanelShell({ nombreSitio, logoUrl, role, defaultOpen = true, chi
           <Separator orientation="vertical" className="mr-1 data-[orientation=vertical]:h-5" />
           <Titulo />
           <div className="ml-auto flex items-center gap-3">
+            <a
+              href="https://seventwo.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden h-7 items-center rounded-md px-2.5 text-sm font-medium whitespace-nowrap text-muted-foreground transition-colors hover:bg-muted hover:text-foreground sm:flex"
+            >
+              seventwo
+            </a>
             <Badge variant="outline" className="hidden sm:inline-flex">
               {ETIQUETA_ROL[role] ?? role}
             </Badge>

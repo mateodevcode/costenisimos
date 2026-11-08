@@ -168,6 +168,73 @@
   font-variation-settings: "SOFT" 100, "WONK" 1;
 }
 
+/* ── Barra de scroll ─────────────────────────────────────────────────────
+   Una sola definición con variables; cada piel del sitio público solo cambia
+   los colores. Por defecto (panel /master) es blanco y negro, invertido en modo oscuro.
+   El layout público marca su contenedor con data-piel y aquí se lee con :has(). */
+:root {
+  --scroll-ancho: 8px;
+  --scroll-pista: #fff;
+  --scroll-pulgar: #000;
+  --scroll-pulgar-hover: #404040;
+  --scroll-radio: 999px;
+}
+.dark {
+  --scroll-pista: #000;
+  --scroll-pulgar: #fff;
+  --scroll-pulgar-hover: #bfbfbf;
+}
+html:has([data-piel="tropical"]) {
+  --scroll-ancho: 11px;
+  --scroll-pista: var(--color-paper);
+  --scroll-pulgar: var(--color-navy);
+  --scroll-pulgar-hover: var(--color-sun);
+}
+html:has([data-piel="kraft"]) {
+  --scroll-ancho: 11px;
+  --scroll-pista: var(--color-paper-2);
+  --scroll-pulgar: var(--color-hibiscus);
+  --scroll-pulgar-hover: var(--color-navy);
+  --scroll-radio: 3px;
+}
+html:has([data-piel="autentico"]) {
+  --scroll-ancho: 11px;
+  --scroll-pista: var(--color-cream);
+  --scroll-pulgar: var(--color-olive);
+  --scroll-pulgar-hover: var(--color-mango);
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: var(--scroll-ancho);
+  height: var(--scroll-ancho);
+}
+::-webkit-scrollbar-track {
+  background: var(--scroll-pista);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-pulgar);
+  border-radius: var(--scroll-radio);
+  /* Borde del color de la pista: el pulgar "flota" y se ve más fino. */
+  border: 2px solid var(--scroll-pista);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-pulgar-hover);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-corner {
+  background: var(--scroll-pista);
+}
+
+/* Firefox (en Chrome 121+ scrollbar-color anularía los ::-webkit-, por eso va aparte). */
+@supports not selector(::-webkit-scrollbar) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scroll-pulgar) var(--scroll-pista);
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

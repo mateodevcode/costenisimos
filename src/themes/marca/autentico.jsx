@@ -87,16 +87,21 @@ export function Franja({ items, className, separador = "✶", duracion = 28 }) {
       ))}
     </div>
   );
+  // El contenedor externo recorta en X: si la franja se rota (p. ej. -rotate-1),
+  // sus esquinas sobresalen del viewport y generarían scroll horizontal.
+  // -mx-4 la ensancha para que no se vean huecos en los bordes al rotarla.
   return (
-    <div className={cn("overflow-hidden", className)}>
-      <motion.div
-        className="flex w-max"
-        animate={reducir ? undefined : { x: ["0%", "-50%"] }}
-        transition={{ duration: duracion, repeat: Infinity, ease: "linear" }}
-      >
-        {fila("a")}
-        {fila("b")}
-      </motion.div>
+    <div className="overflow-x-clip">
+      <div className={cn("-mx-4 overflow-hidden", className)}>
+        <motion.div
+          className="flex w-max"
+          animate={reducir ? undefined : { x: ["0%", "-50%"] }}
+          transition={{ duration: duracion, repeat: Infinity, ease: "linear" }}
+        >
+          {fila("a")}
+          {fila("b")}
+        </motion.div>
+      </div>
     </div>
   );
 }
