@@ -1,6 +1,6 @@
 // Tipografías de los temas. Solo definen variables CSS: el navegador descarga cada fuente
 // únicamente cuando un tema la usa (preload desactivado salvo la de cuerpo general).
-import { Anton, Caveat, Figtree, Fraunces, Nunito, Yellowtail, Young_Serif } from "next/font/google";
+import { Anton, Caveat, Figtree, Fraunces, Montserrat, Nunito, Playfair_Display, Yellowtail, Young_Serif } from "next/font/google";
 
 // Línea tropical (plantilla opción 1)
 export const fraunces = Fraunces({
@@ -20,6 +20,10 @@ export const caveat = Caveat({ variable: "--nf-caveat", subsets: ["latin"], weig
 export const anton = Anton({ variable: "--nf-anton", subsets: ["latin"], weight: "400", display: "swap", preload: false });
 export const yellowtail = Yellowtail({ variable: "--nf-yellowtail", subsets: ["latin"], weight: "400", display: "swap", preload: false });
 
-export const variablesFuentesTemas = [fraunces, nunito, youngSerif, figtree, caveat, anton, yellowtail]
+// Tipografías pedidas por el cliente para "Lo auténtico": títulos en Playfair, texto en Montserrat.
+export const playfair = Playfair_Display({ variable: "--nf-playfair", subsets: ["latin"], display: "swap", preload: false });
+export const montserrat = Montserrat({ variable: "--nf-montserrat", subsets: ["latin"], display: "swap", preload: false });
+
+export const variablesFuentesTemas = [fraunces, nunito, youngSerif, figtree, caveat, anton, yellowtail, playfair, montserrat]
   .map((f) => f.variable)
   .join(" ");

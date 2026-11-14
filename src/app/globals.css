@@ -87,6 +87,8 @@
   --font-caveat: var(--nf-caveat);
   --font-anton: var(--nf-anton);
   --font-yellowtail: var(--nf-yellowtail);
+  --font-playfair: var(--nf-playfair);
+  --font-montserrat: var(--nf-montserrat);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

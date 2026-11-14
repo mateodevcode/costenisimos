@@ -6,8 +6,9 @@ export const ROLES_ADMIN = ["admin", "superadmin"];
 
 /** Tipos de menú del restaurante. Editable por restaurante. */
 export const MENU_TIPOS = [
-  { id: "desayuno", nombre: "Desayuno", desde: 6, hasta: 11 },
-  { id: "dia", nombre: "Día", desde: 11, hasta: 17 },
+  // desde/hasta en horas decimales: 11.5 = 11:30 a. m.
+  { id: "desayuno", nombre: "Desayuno", desde: 6, hasta: 11.5 },
+  { id: "dia", nombre: "Día", desde: 11.5, hasta: 17 },
   { id: "noche", nombre: "Noche", desde: 17, hasta: 24 },
 ];
 export const MENU_IDS = MENU_TIPOS.map((m) => m.id);
@@ -17,17 +18,19 @@ export const CONFIG_KEYS = ["home_theme", "menu_theme", "menu_info", "site"];
 export const ZONA_HORARIA_DEFAULT = "America/Bogota";
 export const MONEDA_DEFAULT = "COP";
 
-/** Hora actual (0-23) en la zona horaria del restaurante. */
+/** Hora actual en la zona horaria del restaurante, en horas decimales (11:30 → 11.5). */
 export function horaEnZona(zonaHoraria = ZONA_HORARIA_DEFAULT, fecha = new Date()) {
   try {
     const partes = new Intl.DateTimeFormat("en-US", {
       hour: "numeric",
+      minute: "numeric",
       hourCycle: "h23",
       timeZone: zonaHoraria,
     }).formatToParts(fecha);
-    return Number(partes.find((p) => p.type === "hour")?.value ?? fecha.getHours());
+    const valor = (tipo, def) => Number(partes.find((p) => p.type === tipo)?.value ?? def);
+    return valor("hour", fecha.getHours()) + valor("minute", fecha.getMinutes()) / 60;
   } catch {
-    return fecha.getHours();
+    return fecha.getHours() + fecha.getMinutes() / 60;
   }
 }
 
@@ -54,6 +57,8 @@ export const SITE_DEFAULT = {
   email: "",
   direccion: "",
   mapsQuery: "",
+  // Abre directo "Escribir una opinión" de Costeñísimos en Google (Place ID del local).
+  resenasUrl: "https://search.google.com/local/writereview?placeid=ChIJOyQx6OyDRo4RvCEsfJ6L9bg",
   whatsapp: [],
   redes: { instagram: "", facebook: "", tiktok: "" },
   logoUrl: "",

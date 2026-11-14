@@ -12,7 +12,7 @@ import { Encabezado, Vacio } from "@/components/master/comun";
 import { fetchApi } from "@/lib/fetch-api";
 import { cn } from "@/lib/utils";
 
-const ENTIDADES = { producto: "Producto", categoria: "Categoría", ingrediente: "Ingrediente", configuracion: "Configuración", usuario: "Usuario" };
+const ENTIDADES = { producto: "Producto", categoria: "Categoría", ingrediente: "Ingrediente", configuracion: "Configuración", usuario: "Usuario", promocion: "Promoción" };
 const ACCIONES = {
   crear: "Crear",
   editar: "Editar",

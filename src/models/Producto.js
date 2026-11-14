@@ -10,6 +10,7 @@ const ProductoSchema = new mongoose.Schema(
     descripcion: { type: String, default: "" },
     ingredientes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Ingrediente" }],
     disponibilidad: { type: Boolean, default: true },
+    imperdible: { type: Boolean, default: false }, // sale en "Los imperdibles" de la portada
     menus: { type: [String], default: [] }, // valores válidos: MENU_IDS en src/lib/constants.js
   },
   { timestamps: true }

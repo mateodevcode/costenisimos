@@ -6,7 +6,7 @@ import { eliminarObjeto, subirObjeto } from "@/lib/s3";
 import { slugify } from "@/lib/utils";
 
 export const MAX_BYTES = 10 * 1024 * 1024;
-export const MAX_LADO = { productos: 1280, categorias: 1280, ingredientes: 800, sitio: 1600 };
+export const MAX_LADO = { productos: 1280, categorias: 1280, ingredientes: 800, sitio: 1600, promociones: 1600 };
 
 const EXTENSIONES = {
   "image/jpeg": "jpg",

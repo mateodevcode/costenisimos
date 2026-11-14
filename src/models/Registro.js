@@ -13,7 +13,7 @@ export const ACCIONES = [
   "desbloquear",
   "cambiar_rol",
 ];
-export const ENTIDADES = ["producto", "categoria", "ingrediente", "configuracion", "usuario"];
+export const ENTIDADES = ["producto", "categoria", "ingrediente", "configuracion", "usuario", "promocion"];
 
 const RegistroSchema = new mongoose.Schema(
   {

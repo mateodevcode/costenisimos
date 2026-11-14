@@ -63,7 +63,7 @@ export function BannerOndulado({ children, id, as: Tag = "h2", className, textoC
       </svg>
       <Tag
         id={id}
-        className={cn("relative font-anton text-[clamp(36px,5vw,64px)] leading-[0.95] tracking-wide text-white uppercase [text-shadow:3px_3px_0_#1B2A5C]", textoClassName)}
+        className={cn("relative font-playfair text-[clamp(34px,4.6vw,60px)] leading-[1] font-bold text-white [text-shadow:3px_3px_0_#1B2A5C]", textoClassName)}
       >
         {children}
       </Tag>

@@ -71,10 +71,14 @@ export function ReservaWhatsApp({ site, estilos = {}, textoBoton = "Enviar por W
     boton: "inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 font-bold",
     ...estilos,
   };
+  // Los inputs (sobre todo date/time) tienen un ancho mínimo propio: sin esto desbordan
+  // la columna de la grilla en pantallas medianas.
+  s.campo = cn(s.campo, "min-w-0");
+  s.input = cn(s.input, "w-full min-w-0");
 
   return (
     <form onSubmit={enviar} className={s.form} noValidate>
-      <div className={cn(s.campo, "sm:col-span-2")}>
+      <div className={cn(s.campo, "col-span-full")}>
         <label htmlFor={`${id}-n`} className={s.label}>
           Nombre
         </label>
@@ -110,7 +114,7 @@ export function ReservaWhatsApp({ site, estilos = {}, textoBoton = "Enviar por W
         </label>
         <input id={`${id}-o`} className={s.input} value={f.nota} onChange={set("nota")} placeholder="Cumpleaños, silla de bebé…" />
       </div>
-      <button type="submit" className={cn(s.boton, "sm:col-span-2")}>
+      <button type="submit" className={cn(s.boton, "col-span-full")}>
         <Send className="size-4" />
         {textoBoton}
       </button>

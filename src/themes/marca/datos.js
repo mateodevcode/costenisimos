@@ -52,11 +52,17 @@ export const IMG = {
   cajaMesa: "/marca/caja-mesa.webp",
   cajaToHome: "/marca/caja-to-home.webp",
   empanadas: "/marca/empanadas-caja.webp",
+  seaUnoDeEllos: "/marca/sea-uno-de-ellos.jpeg",
   lampara: "/marca/lampara.webp",
   pared: "/marca/pared-autentico.webp",
   cartas: "/marca/cartas-pared.webp",
   tarjetas: "/marca/tarjetas.webp",
   portadaCarta: "/marca/portada-carta.webp",
+  // Página Nosotros (respaldo si no hay fotos en Configuración → Nosotros → Galería).
+  nosotros1: "/marca/nosotros-1.jpeg",
+  nosotros2: "/marca/nosotros-2.jpeg",
+  // Sección "Nuestra identidad" de la portada.
+  identidad: "/marca/nuestra-identidad.jpeg",
 };
 
 /** Galería: primero las imágenes subidas en "Nosotros", luego las de marca. */

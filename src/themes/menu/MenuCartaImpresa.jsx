@@ -5,51 +5,108 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
-import { Clock } from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { ChevronDown, Clock } from "lucide-react";
 import { EASE } from "@/themes/marca/anim";
 import { Letrero } from "@/themes/marca/autentico";
 import { Ramo } from "@/themes/marca/Follaje";
 import { BannerOndulado } from "@/themes/marca/formas";
 import { Logo } from "@/themes/marca/Logo";
-import { DetalleProducto, NotaMenu, Precio, SinResultados, horarioDeMenu, useFiltrosMenu } from "@/themes/menu/comun";
+import { NotaMenu, Precio, SinResultados, horarioDeMenu, useFiltrosMenu } from "@/themes/menu/comun";
 import { cn } from "@/lib/utils";
 
-const anton = "font-anton uppercase tracking-wide";
+const titulo = "font-playfair font-bold";
 
-function Plato({ p, site, onAbrir, indice }) {
+function Plato({ p, site, abierto, onAlternar, indice, mapaIngredientes }) {
   const reducir = useReducedMotion();
+  const ingredientes = p.ingredientes.map((id) => mapaIngredientes.get(id)).filter(Boolean);
+  const panel = `plato-${p.id}`;
   return (
     <motion.li
+      layout={reducir ? false : "position"}
       initial={reducir ? false : { opacity: 0, x: indice % 2 ? 24 : -24 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: "0px 0px -8% 0px" }}
       transition={{ duration: 0.6, ease: EASE, delay: (indice % 6) * 0.05 }}
+      className={cn("border-b border-dashed border-navy/15", abierto && "md:col-span-2")}
     >
       <button
         type="button"
-        onClick={() => onAbrir(p)}
-        className="group flex w-full items-center gap-4 border-b border-dashed border-navy/15 py-4 text-left focus-visible:ring-2 focus-visible:ring-mango focus-visible:outline-none"
+        onClick={onAlternar}
+        aria-expanded={abierto}
+        aria-controls={panel}
+        className="group flex w-full items-center gap-4 py-4 text-left focus-visible:ring-2 focus-visible:ring-mango focus-visible:outline-none"
       >
         <span className="relative size-24 shrink-0 md:size-28">
           <span className="absolute inset-0 rounded-full bg-[#262626] shadow-[0_6px_14px_rgba(0,0,0,.25)] transition duration-500 group-hover:-rotate-12 group-hover:scale-105" />
           {p.image && (
             <span className="absolute inset-[7%] overflow-hidden rounded-full">
-              <Image src={p.image} alt={p.nombre} fill sizes="112px" className={cn("object-cover", !p.disponibilidad && "grayscale")} />
+              <Image src={p.image} alt="" fill sizes="112px" className={cn("object-cover", !p.disponibilidad && "grayscale")} />
             </span>
           )}
           {!p.disponibilidad && (
-            <span className={`${anton} absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 rounded border-2 border-hibiscus bg-white/90 px-1.5 text-sm text-hibiscus`}>
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 rounded border-2 border-hibiscus bg-white/90 px-1.5 text-xs font-bold tracking-wider text-hibiscus uppercase">
               Agotado
             </span>
           )}
         </span>
         <span className="min-w-0 flex-1">
-          <span className={cn(`${anton} block text-2xl leading-none text-navy`, !p.disponibilidad && "text-navy/50")}>{p.nombre}</span>
-          {p.descripcion && <span className="mt-1.5 line-clamp-3 block text-sm leading-snug text-navy/75">{p.descripcion}</span>}
-          <Precio valor={p.precio} site={site} className="mt-1.5 block font-anton text-2xl text-hibiscus" />
+          <span className={cn(`${titulo} block text-2xl leading-tight text-navy`, !p.disponibilidad && "text-navy/50")}>{p.nombre}</span>
+          {p.descripcion && !abierto && <span className="mt-1 line-clamp-2 block text-sm leading-snug text-navy/75">{p.descripcion}</span>}
+          <Precio valor={p.precio} site={site} className={`${titulo} mt-1.5 block text-xl text-hibiscus`} />
         </span>
+        <ChevronDown aria-hidden className={cn("size-6 shrink-0 text-mango transition duration-300", abierto && "rotate-180")} />
       </button>
+
+      <AnimatePresence initial={false}>
+        {abierto && (
+          <motion.div
+            id={panel}
+            key="detalle"
+            initial={reducir ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            animate={reducir ? { opacity: 1 } : { height: "auto", opacity: 1 }}
+            exit={reducir ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            transition={{ duration: 0.45, ease: EASE }}
+            className="overflow-hidden"
+          >
+            <div className="grid gap-6 pb-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] md:items-start">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-[#262626] shadow-[0_14px_30px_rgba(0,0,0,.18)]">
+                {p.image && (
+                  <Image src={p.image} alt={p.nombre} fill sizes="(max-width: 768px) 92vw, 500px" className={cn("object-cover", !p.disponibilidad && "grayscale")} />
+                )}
+              </div>
+              <div className="grid content-start gap-4">
+                {p.descripcion ? (
+                  <p className="leading-relaxed whitespace-pre-line text-navy/85">{p.descripcion}</p>
+                ) : (
+                  <p className="text-sm text-navy/60">Pregúntanos por este plato.</p>
+                )}
+                {ingredientes.length > 0 && (
+                  <div>
+                    <h3 className="mb-2 text-xs font-bold tracking-widest text-mango uppercase">Lleva</h3>
+                    <ul className="flex flex-wrap gap-2">
+                      {ingredientes.map((i) => (
+                        <li key={i.id} className="flex items-center gap-2 rounded-full bg-cream py-1 pr-3 pl-1 text-sm">
+                          {i.imagen && (
+                            <span className="relative size-7 overflow-hidden rounded-full">
+                              <Image src={i.imagen} alt="" fill sizes="28px" className="object-cover" />
+                            </span>
+                          )}
+                          {i.nombre}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <Precio valor={p.precio} site={site} className={`${titulo} text-3xl text-hibiscus`} />
+                {!p.disponibilidad && (
+                  <p className="rounded-lg bg-hibiscus/10 px-3 py-2 text-sm text-hibiscus">Este plato no está disponible en este momento.</p>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.li>
   );
 }
@@ -57,7 +114,7 @@ function Plato({ p, site, onAbrir, indice }) {
 export default function MenuCartaImpresa({ categorias, productos, ingredientes, site, menuInfo }) {
   const f = useFiltrosMenu({ categorias, productos, ingredientes, site });
   const reducir = useReducedMotion();
-  const [seleccionado, setSeleccionado] = useState(null);
+  const [abierto, setAbierto] = useState(null);
   const [activa, setActiva] = useState(null);
   const nav = useRef(null);
   const horario = horarioDeMenu(menuInfo, f.menu);
@@ -84,13 +141,13 @@ export default function MenuCartaImpresa({ categorias, productos, ingredientes, 
   const ir = (id) => document.getElementById(`carta-${id}`)?.scrollIntoView({ behavior: reducir ? "auto" : "smooth", block: "start" });
 
   return (
-    <main className="bg-cream font-figtree text-navy">
+    <main className="bg-cream font-montserrat text-navy">
       <section className="relative overflow-hidden muro-olivo px-5 pt-14 pb-20 text-center text-cream" aria-labelledby="carta-titulo">
         <motion.div initial={reducir ? false : { opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, ease: EASE }} className="mx-auto w-[min(70vw,300px)]">
-          <Logo className="w-full text-sun [filter:drop-shadow(3px_3px_0_#1B2A5C)]" titulo={site.nombre} conSubtitulo subtituloClassName="text-cream text-5xl -mt-3" />
+          <Logo className="w-full text-sun [filter:drop-shadow(3px_3px_0_#1B2A5C)]" titulo={site.nombre} conSubtitulo subtituloClassName="mt-1 font-montserrat text-2xl font-semibold tracking-wide text-cream" />
         </motion.div>
         <h1 id="carta-titulo" className="mt-6">
-          <Letrero texto="Nuestra carta" retraso={0.2} className={`${anton} text-[clamp(44px,7vw,96px)] leading-[0.95] text-[#1d2117]/90`} />
+          <Letrero texto="Nuestra carta" retraso={0.2} className={`${titulo} text-[clamp(44px,7vw,96px)] leading-[1] text-[#1d2117]/90`} />
         </h1>
         {f.menusDisponibles.length > 0 && (
           <div role="tablist" aria-label="Tipo de menú" className="mx-auto mt-7 inline-flex rounded-full bg-black/20 p-1">
@@ -101,7 +158,7 @@ export default function MenuCartaImpresa({ categorias, productos, ingredientes, 
                 role="tab"
                 aria-selected={f.menu === m.id}
                 onClick={() => f.setMenu(m.id)}
-                className={cn(`${anton} relative rounded-full px-5 py-2 text-lg`, f.menu === m.id ? "text-white" : "text-cream/75 hover:text-cream")}
+                className={cn("relative rounded-full px-5 py-2 text-base font-semibold", f.menu === m.id ? "text-white" : "text-cream/75 hover:text-cream")}
               >
                 {f.menu === m.id && <motion.span layoutId="pildora-impresa" className="absolute inset-0 rounded-full bg-mango" />}
                 <span className="relative">{m.nombre}</span>
@@ -125,7 +182,7 @@ export default function MenuCartaImpresa({ categorias, productos, ingredientes, 
               type="button"
               onClick={() => ir(categoria.id)}
               aria-current={activa === categoria.id ? "true" : undefined}
-              className={cn(`${anton} shrink-0 rounded-full px-4 py-1.5 text-base transition`, activa === categoria.id ? "bg-mango text-white" : "bg-white text-navy hover:bg-mango/15")}
+              className={cn("shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold transition", activa === categoria.id ? "bg-mango text-white" : "bg-white text-navy hover:bg-mango/15")}
             >
               {categoria.nombre}
             </button>
@@ -156,22 +213,13 @@ export default function MenuCartaImpresa({ categorias, productos, ingredientes, 
             </div>
             <ul className="relative mt-6 grid gap-x-12 md:grid-cols-2">
               {lista.map((p, j) => (
-                <Plato key={p.id} p={p} site={site} onAbrir={setSeleccionado} indice={j} />
+                <Plato key={p.id} p={p} site={site} indice={j} abierto={abierto === p.id} onAlternar={() => setAbierto((a) => (a === p.id ? null : p.id))} mapaIngredientes={f.mapaIngredientes} />
               ))}
             </ul>
           </motion.section>
         ))}
         <NotaMenu menuInfo={menuInfo} />
       </div>
-
-      <DetalleProducto
-        producto={seleccionado}
-        onClose={() => setSeleccionado(null)}
-        mapaIngredientes={f.mapaIngredientes}
-        categorias={categorias}
-        site={site}
-        clases={{ contenido: "rounded-xl bg-white text-navy", titulo: "font-anton text-3xl font-normal uppercase tracking-wide", precio: "font-anton text-2xl font-normal text-hibiscus", categoria: "text-mango font-bold" }}
-      />
     </main>
   );
 }

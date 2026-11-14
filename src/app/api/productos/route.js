@@ -28,6 +28,7 @@ const camposSchema = z.object({
   descripcion: z.string().max(600, "La descripción es muy larga (máx. 600 caracteres)."),
   ingredientes: z.array(zId).max(100).transform((ids) => [...new Set(ids)]),
   disponibilidad: z.boolean(),
+  imperdible: z.boolean(),
   menus: z
     .array(z.enum(MENU_IDS, { error: "Tipo de menú inválido." }))
     .max(MENU_IDS.length)
@@ -49,10 +50,11 @@ function leerCampos(fd, { parcial }) {
     descripcion: texto(fd, "descripcion"),
     ingredientes: json(fd, "ingredientes"),
     disponibilidad: booleano(fd, "disponibilidad"),
+    imperdible: booleano(fd, "imperdible"),
     menus: json(fd, "menus"),
   };
   const limpio = Object.fromEntries(Object.entries(crudo).filter(([, v]) => v !== undefined));
-  const schema = parcial ? camposSchema.partial() : camposSchema.partial({ descripcion: true, ingredientes: true, disponibilidad: true, menus: true });
+  const schema = parcial ? camposSchema.partial() : camposSchema.partial({ descripcion: true, ingredientes: true, disponibilidad: true, imperdible: true, menus: true });
   const datos = schema.parse(limpio);
   if (datos.nombre !== undefined) datos.nombre = capitalizar(datos.nombre);
   if (datos.descripcion !== undefined) datos.descripcion = limpiarTexto(datos.descripcion);

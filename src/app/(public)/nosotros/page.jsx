@@ -1,14 +1,15 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { connection } from "next/server";
-import { getSite } from "@/lib/config";
+import { getConfig } from "@/lib/config";
 import { Galeria } from "@/components/public/Galeria";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import NosotrosAutentico from "@/themes/nosotros/NosotrosAutentico";
 
 export async function generateMetadata() {
   await connection();
-  const site = await getSite();
+  const { site } = await getConfig();
   return {
     title: site.nosotros?.titulo || "Nosotros",
     description: site.nosotros?.parrafos?.[0]?.slice(0, 160) || `Conoce la historia de ${site.nombre}.`,
@@ -17,7 +18,10 @@ export async function generateMetadata() {
 
 async function Contenido() {
   await connection();
-  const site = await getSite();
+  const { site, home_theme } = await getConfig();
+  // La plantilla "Lo auténtico" (c) tiene su propia página Nosotros.
+  if (home_theme === "c") return <NosotrosAutentico site={site} />;
+
   const { titulo, parrafos = [], imagenes = [] } = site.nosotros || {};
   return (
     <main className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-14 md:py-20 lg:grid-cols-2 lg:items-start">

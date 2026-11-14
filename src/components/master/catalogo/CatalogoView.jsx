@@ -176,7 +176,10 @@ export function CatalogoView({ categorias, productos, ingredientes, moneda }) {
                       </TableCell>
                       <TableCell className="text-right tabular-nums">{formatearPrecio(p.precio, moneda)}</TableCell>
                       <TableCell className="hidden sm:table-cell">
-                        <Badge variant={p.disponibilidad ? "secondary" : "destructive"}>{p.disponibilidad ? "Disponible" : "Agotado"}</Badge>
+                        <div className="flex flex-wrap gap-1">
+                          <Badge variant={p.disponibilidad ? "secondary" : "destructive"}>{p.disponibilidad ? "Disponible" : "Agotado"}</Badge>
+                          {p.imperdible && <Badge>Imperdible</Badge>}
+                        </div>
                       </TableCell>
                       <TableCell>
                         <Acciones nombre={p.nombre} onEditar={() => setDialogo({ tipo: "producto", item: p })} onEliminar={() => pedirBorrado("producto", p)} />

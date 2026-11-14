@@ -47,6 +47,7 @@ function Formulario({ producto, categorias, ingredientes, onCerrar, onGuardado }
     categoria: producto?.categoria ?? categorias[0]?.id ?? "",
     descripcion: producto?.descripcion ?? "",
     disponibilidad: producto?.disponibilidad ?? true,
+    imperdible: producto?.imperdible ?? false,
     menus: producto?.menus ?? [],
     ingredientes: producto?.ingredientes ?? [],
   });
@@ -85,6 +86,7 @@ function Formulario({ producto, categorias, ingredientes, onCerrar, onGuardado }
     fd.set("categoria", form.categoria);
     fd.set("descripcion", form.descripcion);
     fd.set("disponibilidad", String(form.disponibilidad));
+    fd.set("imperdible", String(form.imperdible));
     fd.set("menus", JSON.stringify(form.menus));
     fd.set("ingredientes", JSON.stringify(form.ingredientes));
     if (file) fd.set("file", file);
@@ -196,6 +198,14 @@ function Formulario({ producto, categorias, ingredientes, onCerrar, onGuardado }
           <span className="text-muted-foreground">Si lo desactivas, aparece como “Agotado”.</span>
         </span>
         <Switch checked={form.disponibilidad} onCheckedChange={(v) => set("disponibilidad", v)} />
+      </label>
+
+      <label className="flex items-center justify-between gap-4 rounded-lg border p-3 text-sm">
+        <span>
+          <span className="block font-medium">Imperdible</span>
+          <span className="text-muted-foreground">Aparece en “Los imperdibles” de la portada.</span>
+        </span>
+        <Switch checked={form.imperdible} onCheckedChange={(v) => set("imperdible", v)} />
       </label>
 
       {error && (

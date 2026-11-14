@@ -160,6 +160,13 @@ export function SiteForm({ inicial }) {
         <Campo id="s-maps" label="Búsqueda en Google Maps" ayuda="Texto o coordenadas que ubican el local en el mapa (si se deja vacío se usa la dirección).">
           <Input id="s-maps" value={s.mapsQuery} onChange={txt("mapsQuery")} maxLength={200} />
         </Campo>
+        <Campo
+          id="s-resenas"
+          label="Enlace para reseñas de Google"
+          ayuda="En el Perfil de Empresa de Google: “Pedir reseñas” → copiar enlace (g.page/r/…/review). Si se deja vacío, el botón abre el local en Google Maps."
+        >
+          <Input id="s-resenas" type="url" value={s.resenasUrl} onChange={txt("resenasUrl")} maxLength={1000} placeholder="https://g.page/r/…/review" />
+        </Campo>
       </Seccion>
       <Separator />
 

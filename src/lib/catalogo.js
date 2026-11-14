@@ -41,6 +41,7 @@ export function serializarProducto(p) {
     descripcion: p.descripcion || "",
     ingredientes: (p.ingredientes || []).map((i) => String(i._id ?? i)),
     disponibilidad: p.disponibilidad !== false,
+    imperdible: p.imperdible === true,
     menus: Array.isArray(p.menus) ? p.menus : [],
     updatedAt: fecha(p.updatedAt),
   };

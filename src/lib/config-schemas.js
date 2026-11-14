@@ -42,6 +42,7 @@ export const siteSchema = z
     email: correoOVacio,
     direccion: corto(200),
     mapsQuery: corto(200),
+    resenasUrl: urlOVacio,
     whatsapp: z
       .array(
         z.object({
