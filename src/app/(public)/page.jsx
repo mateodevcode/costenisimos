@@ -3,13 +3,18 @@ import { connection } from "next/server";
 import { getConfig } from "@/lib/config";
 import { getCatalogo } from "@/lib/catalogo";
 import { getPromociones, promocionesVigentes } from "@/lib/promociones";
+import { SEO } from "@/lib/seo";
 import { HOME_THEMES, getTheme } from "@/themes/registry";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export async function generateMetadata() {
   await connection();
   const { site } = await getConfig();
-  return { title: { absolute: site.slogan ? `${site.nombre} · ${site.slogan}` : site.nombre } };
+  return {
+    title: { absolute: `${site.nombre} | ${SEO.titulo}` },
+    description: SEO.descripcion,
+    alternates: { canonical: "/" },
+  };
 }
 
 /**

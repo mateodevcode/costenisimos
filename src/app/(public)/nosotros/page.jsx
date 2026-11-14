@@ -6,13 +6,20 @@ import { Galeria } from "@/components/public/Galeria";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import NosotrosAutentico from "@/themes/nosotros/NosotrosAutentico";
+import { OG_IMAGEN } from "@/lib/seo";
 
 export async function generateMetadata() {
   await connection();
-  const { site } = await getConfig();
+  const { site, home_theme } = await getConfig();
+  const descripcion =
+    home_theme === "c"
+      ? `${site.nombre} lleva el sabor de la costa colombiana a Envigado y Medellín: recetas tradicionales, calidez y tradición en una misma mesa. Full sabor a pueblo.`
+      : site.nosotros?.parrafos?.[0]?.slice(0, 160) || `Conoce la historia de ${site.nombre}.`;
   return {
-    title: site.nosotros?.titulo || "Nosotros",
-    description: site.nosotros?.parrafos?.[0]?.slice(0, 160) || `Conoce la historia de ${site.nombre}.`,
+    title: "Nuestra historia",
+    description: descripcion,
+    alternates: { canonical: "/nosotros" },
+    openGraph: { title: `Nuestra historia | ${site.nombre}`, description: descripcion, url: "/nosotros", images: [OG_IMAGEN] },
   };
 }
 

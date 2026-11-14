@@ -6,6 +6,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 export const metadata = {
   title: "Política de privacidad",
   description: "Política de tratamiento de datos personales.",
+  alternates: { canonical: "/politicas-de-privacidad" },
+  // Página legal: no aporta al posicionamiento; se deja fuera del índice pero se siguen sus enlaces.
+  robots: { index: false, follow: true },
 };
 
 // REVISAR CON ASESOR LEGAL

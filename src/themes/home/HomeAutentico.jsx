@@ -74,6 +74,12 @@ export default function HomeAutentico({ site, menuInfo, destacados = [], promoci
         <LamparaMimbre className="top-0 left-[8%] hidden md:block" />
         <div className="relative mx-auto grid max-w-[1220px] items-center gap-12 px-5 pt-20 pb-24 md:grid-cols-[1.2fr_.8fr] md:pt-28 md:pb-32">
           <div className="md:pl-[12%]">
+            <Revelar
+              as="p"
+              className="mb-4 text-xs font-bold tracking-[0.3em] text-cream/80 uppercase md:text-sm"
+            >
+              Restaurante costeño · Envigado, Medellín
+            </Revelar>
             <h1 id="hero-titulo">
               <Letrero
                 texto="El sabor de la costa"
