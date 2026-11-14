@@ -7,6 +7,9 @@ const RefreshTokenSchema = new mongoose.Schema(
     usuarioId: { type: mongoose.Schema.Types.ObjectId, ref: "Usuario", index: true },
     expiraEn: { type: Date, required: true, index: { expires: 0 } },
     revocado: { type: Boolean, default: false },
+    // Cuándo se usó para renovar (rotación). Distingue una renovación simultánea legítima
+    // (dos pestañas a la vez) de la reutilización de un token robado.
+    rotadoEn: { type: Date, default: null },
   },
   { timestamps: true }
 );

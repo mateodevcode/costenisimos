@@ -24,6 +24,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { NAV_MASTER } from "@/components/master/navegacion";
+import { useMantenerSesion } from "@/components/master/useMantenerSesion";
 
 const ETIQUETA_ROL = { empleado: "Empleado", admin: "Admin", superadmin: "Superadmin" };
 
@@ -59,6 +60,7 @@ function Titulo() {
 
 /** Layout visual del panel: sidebar con marca (site.nombre) y header con título de la vista y menú de usuario. */
 export function PanelShell({ nombreSitio, logoUrl, role, defaultOpen = true, children }) {
+  useMantenerSesion();
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <Sidebar collapsible="icon">

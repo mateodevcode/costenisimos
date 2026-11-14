@@ -12,16 +12,26 @@ export const EVENTO_SESION_EXPIRADA = "sesion-expirada";
 
 let refreshEnCurso = null;
 
-/** Renueva la sesión una sola vez aunque varias peticiones fallen a la vez (promesa compartida). */
-export function refrescarSesion() {
-  refreshEnCurso ??= fetch("/api/auth/refresh", { method: "POST", credentials: "same-origin" })
+const pedirRefresh = () =>
+  fetch("/api/auth/refresh", { method: "POST", credentials: "same-origin" })
     .then((r) => r.ok)
-    .catch(() => false)
-    .finally(() => {
-      setTimeout(() => {
-        refreshEnCurso = null;
-      }, 0);
-    });
+    .catch(() => false);
+
+/**
+ * Renueva la sesión una sola vez aunque varias peticiones fallen a la vez (promesa compartida).
+ * Entre pestañas se serializa con Web Locks: la segunda espera a que la primera termine y
+ * renueva con la cookie ya rotada, en vez de presentar la misma (lo que parecería un robo).
+ */
+export function refrescarSesion() {
+  const conBloqueo = () =>
+    typeof navigator !== "undefined" && navigator.locks?.request
+      ? navigator.locks.request("costenisimos-refresh", pedirRefresh)
+      : pedirRefresh();
+  refreshEnCurso ??= conBloqueo().finally(() => {
+    setTimeout(() => {
+      refreshEnCurso = null;
+    }, 0);
+  });
   return refreshEnCurso;
 }
 

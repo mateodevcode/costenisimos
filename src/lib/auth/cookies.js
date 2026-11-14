@@ -2,6 +2,8 @@ import { REFRESH_TTL_DAYS } from "@/lib/auth/tokens";
 
 export const ACCESS_COOKIE = "access_token";
 export const REFRESH_COOKIE = "refresh_token";
+// Marca breve que deja GET /api/auth/refresh para que el proxy no redirija en bucle.
+export const RENOVANDO_COOKIE = "renovando_sesion";
 
 const prod = process.env.NODE_ENV === "production";
 const base = { httpOnly: true, secure: prod, sameSite: "lax", path: "/" };
