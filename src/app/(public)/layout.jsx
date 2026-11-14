@@ -38,7 +38,7 @@ export async function generateMetadata() {
       "geo.position": `${SEO.geo.lat};${SEO.geo.lng}`,
       ICBM: `${SEO.geo.lat}, ${SEO.geo.lng}`,
     },
-    ...(site.logoUrl ? { icons: { icon: site.logoUrl, apple: site.logoUrl } } : {}),
+    // Íconos: app/icon.svg y app/apple-icon.jsx (la C amarilla sobre verde).
   };
 }
 
