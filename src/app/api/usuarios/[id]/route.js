@@ -60,8 +60,13 @@ export const PUT = withErrors(async (req, ctx) => {
   return ok(serializarUsuario(usuario.toObject()), "Perfil actualizado.");
 });
 
+/**
+ * Cada quien puede eliminar su propia cuenta. Borrar cuentas ajenas es solo del superadmin
+ * y va por DELETE /api/admin/usuarios/[id] (con confirmación y registro).
+ */
 export const DELETE = withErrors(async (req, ctx) => {
   const { usuario, esDueno } = await autorizar(req, ctx);
+  if (!esDueno) throw new HttpError(403, "Solo el superadmin puede eliminar cuentas desde el panel.");
 
   if (usuario.role === "superadmin") {
     const otros = await Usuario.countDocuments({ role: "superadmin", _id: { $ne: usuario._id } });

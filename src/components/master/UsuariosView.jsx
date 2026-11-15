@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import { Loader2, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -16,6 +18,9 @@ import { ROLES } from "@/lib/constants";
 import { iniciales } from "@/lib/utils";
 
 const ETIQUETA = { usuario: "Usuario", empleado: "Empleado", admin: "Admin", superadmin: "Superadmin" };
+/** Parte del correo antes de la "@": es lo que se escribe para confirmar el borrado. */
+const usuarioDeCorreo = (email = "") => String(email).split("@")[0].trim().toLowerCase();
+
 const fechaHora = new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short", timeZone: "America/Bogota" });
 
 export function UsuariosView({ usuarios, miId, puedeGestionar }) {
@@ -23,6 +28,7 @@ export function UsuariosView({ usuarios, miId, puedeGestionar }) {
   const [busqueda, setBusqueda] = useState("");
   const [rol, setRol] = useState("todos");
   const [pendiente, setPendiente] = useState(null);
+  const [borrar, setBorrar] = useState(null);
 
   const visibles = usuarios.filter((u) => (rol === "todos" || u.role === rol) && coincide(`${u.name} ${u.email} ${u.telefono}`, busqueda));
 
@@ -79,6 +85,11 @@ export function UsuariosView({ usuarios, miId, puedeGestionar }) {
                 <TableHead>Rol</TableHead>
                 <TableHead className="hidden md:table-cell">Último ingreso</TableHead>
                 <TableHead className="text-right">Bloqueado</TableHead>
+                {puedeGestionar && (
+                  <TableHead className="w-12">
+                    <span className="sr-only">Eliminar</span>
+                  </TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -138,6 +149,21 @@ export function UsuariosView({ usuarios, miId, puedeGestionar }) {
                         <Badge variant={u.bloqueado ? "destructive" : "outline"}>{u.bloqueado ? "Sí" : "No"}</Badge>
                       )}
                     </TableCell>
+                    {puedeGestionar && (
+                      <TableCell className="text-right">
+                        {!soyYo && (
+                          <Button
+                            variant="ghost"
+                            size="icon-sm"
+                            className="text-muted-foreground hover:text-destructive"
+                            aria-label={`Eliminar la cuenta de ${u.name}`}
+                            onClick={() => setBorrar(u)}
+                          >
+                            <Trash2 />
+                          </Button>
+                        )}
+                      </TableCell>
+                    )}
                   </TableRow>
                 );
               })}
@@ -145,6 +171,86 @@ export function UsuariosView({ usuarios, miId, puedeGestionar }) {
           </Table>
         </div>
       )}
+
+      {puedeGestionar && (
+        <EliminarUsuarioDialog
+          usuario={borrar}
+          onCerrar={() => setBorrar(null)}
+          onEliminado={() => {
+            setBorrar(null);
+            router.refresh();
+          }}
+        />
+      )}
     </div>
+  );
+}
+
+/** Confirmación fuerte: hay que escribir el usuario del correo (lo que va antes de la "@"). */
+function EliminarUsuarioDialog({ usuario, onCerrar, onEliminado }) {
+  return (
+    <Dialog open={Boolean(usuario)} onOpenChange={(o) => !o && onCerrar()}>
+      <DialogContent className="sm:max-w-md">
+        {usuario && <FormularioEliminar key={usuario.id} usuario={usuario} onCerrar={onCerrar} onEliminado={onEliminado} />}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function FormularioEliminar({ usuario, onCerrar, onEliminado }) {
+  const [texto, setTexto] = useState("");
+  const [cargando, setCargando] = useState(false);
+  const clave = usuarioDeCorreo(usuario.email);
+  const coincideClave = texto.trim().toLowerCase() === clave;
+
+  const enviar = async (e) => {
+    e.preventDefault();
+    if (!coincideClave) return;
+    setCargando(true);
+    try {
+      await fetchApi(`/api/admin/usuarios/${usuario.id}`, { method: "DELETE", body: { confirmacion: texto.trim() } });
+      toast.success(`Cuenta de ${usuario.email} eliminada.`);
+      onEliminado();
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  return (
+    <form onSubmit={enviar} className="grid gap-4">
+      <DialogHeader>
+        <DialogTitle>¿Eliminar esta cuenta?</DialogTitle>
+        <DialogDescription>
+          Se eliminará la cuenta de <strong className="text-foreground">{usuario.name}</strong> ({usuario.email}) y se cerrarán sus
+          sesiones. Esta acción no se puede deshacer.
+        </DialogDescription>
+      </DialogHeader>
+      <div className="grid gap-1.5">
+        <label htmlFor="confirmar-usuario" className="text-sm">
+          Para confirmar, escribe <code className="rounded bg-muted px-1.5 py-0.5 font-mono font-semibold text-foreground">{clave}</code>
+        </label>
+        <Input
+          id="confirmar-usuario"
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+          autoComplete="off"
+          autoCapitalize="off"
+          spellCheck={false}
+          placeholder={clave}
+          aria-invalid={texto !== "" && !coincideClave}
+        />
+      </div>
+      <DialogFooter>
+        <Button type="button" variant="outline" onClick={onCerrar} disabled={cargando}>
+          Cancelar
+        </Button>
+        <Button type="submit" variant="destructive" disabled={!coincideClave || cargando}>
+          {cargando ? <Loader2 className="animate-spin" /> : <Trash2 />}
+          Eliminar cuenta
+        </Button>
+      </DialogFooter>
+    </form>
   );
 }

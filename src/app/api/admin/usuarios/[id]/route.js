@@ -66,3 +66,41 @@ export const PATCH = withErrors(async (req, ctx) => {
 
   return ok(serializarUsuario(usuario.toObject()), "Usuario actualizado.");
 });
+
+/** Parte del correo antes de la "@" (lo que se escribe para confirmar el borrado). */
+const usuarioDeCorreo = (email = "") => String(email).split("@")[0].trim().toLowerCase();
+
+const borrarSchema = z.object({ confirmacion: z.string().trim().max(200) }).strict();
+
+/** Elimina una cuenta. Solo superadmin y con confirmación escrita (usuario del correo). */
+export const DELETE = withErrors(async (req, ctx) => {
+  const session = await requireRole(req, ["superadmin"]);
+  await rateLimitPanel(session);
+  const { id } = await ctx.params;
+  validarId(id);
+  const { confirmacion } = await leerJson(req, borrarSchema);
+  if (id === session.id) throw new HttpError(400, "No puedes eliminar tu propia cuenta desde aquí.");
+
+  await connectDB();
+  const usuario = await Usuario.findById(id);
+  if (!usuario) throw new HttpError(404, "Usuario no encontrado.");
+  if (confirmacion.toLowerCase() !== usuarioDeCorreo(usuario.email)) {
+    throw new HttpError(400, "La confirmación no coincide con el usuario del correo.");
+  }
+  if (usuario.role === "superadmin") {
+    const otros = await Usuario.countDocuments({ role: "superadmin", _id: { $ne: usuario._id } });
+    if (otros === 0) throw new HttpError(400, "No se puede eliminar el único superadmin.");
+  }
+
+  const antes = serializarUsuario(usuario.toObject());
+  await revocarTodos(usuario._id);
+  await Usuario.deleteOne({ _id: usuario._id });
+
+  await registrar({
+    sesion: session,
+    accion: "eliminar",
+    entidad: "usuario",
+    antes: { _id: antes.id, name: antes.name, email: antes.email, role: antes.role },
+  });
+  return ok(null, `Cuenta de ${antes.email} eliminada.`);
+});
