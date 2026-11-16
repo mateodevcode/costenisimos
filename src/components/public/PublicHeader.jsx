@@ -82,7 +82,7 @@ export function PublicHeader({ site, piel = "tropical" }) {
                 <Menu />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className={cn("w-80 border-none", p.header)}>
+            <SheetContent side="right" className={cn("w-80 border-none [&>button]:text-current [&>button]:opacity-80", p.panel)}>
               <SheetHeader>
                 <SheetTitle className={cn("w-36", p.logo)}>
                   <Logo titulo={site.nombre} />

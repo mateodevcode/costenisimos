@@ -19,6 +19,8 @@ export const PIELES = {
     footerBorde: "border-cream/15",
     redes: "bg-cream/10 text-cream hover:bg-cream/20",
     logo: "text-cream",
+    // Panel del menú móvil: color de fondo explícito (bg-*) para reemplazar el bg-background del Sheet.
+    panel: "bg-navy text-cream",
   },
   kraft: {
     fondo: "grano-kraft text-navy",
@@ -31,6 +33,7 @@ export const PIELES = {
     footerBorde: "border-cream/15",
     redes: "bg-cream/10 text-cream hover:bg-cream/20",
     logo: "text-navy",
+    panel: "bg-paper text-navy",
   },
   autentico: {
     fondo: "bg-cream text-olive-deep",
@@ -43,5 +46,6 @@ export const PIELES = {
     footerBorde: "border-cream/15",
     redes: "bg-cream/10 text-cream hover:bg-cream/20",
     logo: "text-sun",
+    panel: "muro-olivo bg-olive text-cream",
   },
 };

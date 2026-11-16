@@ -18,6 +18,9 @@ export const metadata = {
 
 export const viewport = {
   themeColor: "#5c6b45",
+  // La web solo tiene diseño claro: evita que el "modo oscuro forzado" de Chrome/Android
+  // invierta los colores de la marca (fondos verdes que se vuelven grises, textos ilegibles).
+  colorScheme: "only light",
 };
 
 export default function RootLayout({ children }) {
